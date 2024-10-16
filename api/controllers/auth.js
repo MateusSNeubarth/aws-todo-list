@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
-export const register = async (req, res, next) => {
+export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
@@ -34,7 +34,7 @@ export const register = async (req, res, next) => {
   }
 };
 
-export const login = async (req, res, next) => {
+export const login = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -51,9 +51,14 @@ export const login = async (req, res, next) => {
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Wrong email or password" });
 
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT
+    );
+
     const { password, ...otherDetails } = user;
-    res.status(200).json(otherDetails);
+    res.status(200).json({ details: { ...otherDetails }, token: token });
   } catch (err) {
-    next(err);
+    res.status(500).json(err);
   }
 };
