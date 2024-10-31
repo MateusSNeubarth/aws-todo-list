@@ -27,7 +27,7 @@ export const register = async (req, res) => {
         password: hash,
       },
     });
-    res.status(200).send("User has been created");
+    res.status(201).send("User has been created");
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
@@ -49,7 +49,7 @@ export const login = async (req, res) => {
       user.password
     );
     if (!isPasswordCorrect)
-      return res.status(400).json({ message: "Wrong email or password" });
+      return res.status(401).json({ message: "Wrong email or password" });
 
     const token = jwt.sign(
       { id: user._id },
@@ -59,6 +59,7 @@ export const login = async (req, res) => {
     const { password, ...otherDetails } = user;
     res.status(200).json({ details: { ...otherDetails }, token: token });
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 };

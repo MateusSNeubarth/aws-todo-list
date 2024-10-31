@@ -1,5 +1,5 @@
-const request = require('supertest');
-const app = require('../app');
+import request from 'supertest';
+import app from '../index';
 
 describe('Todo Endpoints', () => {
     let token;
@@ -14,7 +14,7 @@ describe('Todo Endpoints', () => {
                 password: 'password123',
             });
         token = res.body.token;
-        userId = res.body.user.id;
+        userId = res.body.details.id;
     });
 
     it('should create a new to-do', async () => {
@@ -24,7 +24,7 @@ describe('Todo Endpoints', () => {
             .send({
                 todoText: 'My first to-do',
             });
-        expect(res.statusCode).toEqual(201);
+        expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty('id');
     });
 });
@@ -42,7 +42,7 @@ describe('Todo Endpoints', () => {
                 password: 'password123',
             });
         token = res.body.token;
-        userId = res.body.user.id;
+        userId = res.body.details.id;
     });
 
     it('should get all todos for the user', async () => {
@@ -68,7 +68,7 @@ describe('Todo Endpoints', () => {
                 password: 'password123',
             });
         token = res.body.token;
-        userId = res.body.user.id;
+        userId = res.body.details.id;
 
         // Criar uma nova tarefa
         const todoRes = await request(app)

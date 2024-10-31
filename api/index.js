@@ -16,6 +16,10 @@ app.use("/api/todo", todosRoute);
 
 const PORT = process.env.PORT || 8800;
 
-app.listen(PORT, () => {
-  console.log(`Server ready at: http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server ready at: http://localhost:${PORT}`);
+  });
+}
+
+export default app;
